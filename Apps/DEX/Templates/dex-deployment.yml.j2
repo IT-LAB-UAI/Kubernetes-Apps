@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ dex_app_name }}
+  namespace: {{ dex_namespace }}
+spec:
+  replicas: {{ dex_replicas }}
+  selector:
+    matchLabels:
+      app: {{ dex_app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ dex_app_name }}
+    spec:
+      serviceAccountName: {{ dex_service_account }}
+      containers:
+        - name: {{ dex_app_name }}
+          image: {{ dex_image }}:{{ dex_image_tag }}
+          args:
+            - dex
+            - serve
+            - /etc/dex/config.yaml
+          env:
+            - name: DEX_LOG_LEVEL
+              value: {{ dex_log_level }}
+          ports:
+            - containerPort: 5556
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dex
+              readOnly: true
+            - name: tls
+              mountPath: /etc/dex/tls
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: {{ dex_configmap_name }}
+        - name: tls
+          secret:
+            secretName: {{ dex_tls_secret_name }}

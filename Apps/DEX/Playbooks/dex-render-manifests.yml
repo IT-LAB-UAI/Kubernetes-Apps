@@ -1,0 +1,37 @@
+---
+- name: Render Dex Kubernetes manifests
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+      - ../Vars/dex-vars.yml
+
+  tasks:
+      - name: Ensure Manifest output directory exists
+        file:
+            path: ../Manifest
+            state: directory
+
+      - name: Render namespace manifest
+        template:
+            src: ../Templates/dex-namespace.yml.j2
+            dest: ../Manifest/dex-namespace.yml
+
+      - name: Render deployment manifest
+        template:
+            src: ../Templates/dex-deployment.yml.j2
+            dest: ../Manifest/dex-deployment.yml
+
+      - name: Render configmap manifest
+        template:
+            src: ../Templates/dex-configmap.yml.j2
+            dest: ../Manifest/dex-configmap.yml
+
+      - name: Render RBAC manifest
+        template:
+            src: ../Templates/dex-rbac.yml.j2
+            dest: ../Manifest/dex-rbac.yml
+
+      - name: Render service manifest
+        template:
+            src: ../Templates/dex-service.yml.j2
+            dest: ../Manifest/dex-service.yml

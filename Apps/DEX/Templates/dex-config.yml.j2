@@ -1,0 +1,50 @@
+issuer: {{ dex_issuer }}
+
+storage:
+  type: kubernetes
+  config:
+    inCluster: true
+
+web:
+  https: 0.0.0.0:5556
+  tlsCert: /etc/dex/tls/tls.crt
+  tlsKey: /etc/dex/tls/tls.key
+
+connectors:
+  - type: ldap
+    id: ldap
+    name: LDAP
+    config:
+      host: {{ ldap_host }}
+      insecureNoSSL: true
+      bindDN: {{ ldap_bind_dn }}
+      bindPW: {{ ldap_bind_pw }}
+      userSearch:
+        baseDN: {{ ldap_user_base_dn }}
+        filter: "(objectClass=person)"
+        username: uid
+        idAttr: uid
+        emailAttr: mail
+        nameAttr: cn
+      groupSearch:
+        baseDN: {{ ldap_group_base_dn }}
+        filter: "(objectClass=groupOfNames)"
+        userMatchers:
+          - userAttr: uid
+            groupAttr: member
+    claimsMapping:
+      email: mail
+      preferred_username: uid
+      name: cn
+
+staticClients:
+  - id: kubelogin
+    redirectURIs:
+      - {{ kubelogin_redirect_uri }}
+    name: kubelogin CLI
+    secret: {{ kubelogin_secret }}
+    claims:
+      email: true
+      name: true
+      preferred_username: true
+      groups: true

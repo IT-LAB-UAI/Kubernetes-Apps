@@ -1,19 +1,31 @@
+# ============================
+# Vars for OpenLDAP Kubernetes Manifests
+# ============================
+
+# ----------------------------
 # Namespace
-ldap_namespace: # ldap namespace
+# ----------------------------
+ldap_namespace: # Namespace for OpenLDAP
 
+# ----------------------------
 # Deployment
-# ldap_namespace:
-ldap_image: # ldap image e.g. "osixia/openldap"
-ldap_image_tag: # ldap image tag e.g. "1.5.0"
-ldap_organisation: # your organisation for LDAP e.g. "My-Organisation"
-ldap_domain: # your domain for LDAP e.g. "my.org.com"
-ldap_log_level: # log level for LDAP, e.g. "256" for basic logging
+# ----------------------------
+ldap_image: # Image for OpenLDAP
+ldap_image_tag: # Tag for the OpenLDAP image
+ldap_organisation: # Organisation name for OpenLDAP
+ldap_domain: # Domain for OpenLDAP
+ldap_log_level: # Log level for OpenLDAP (e.g., "256" for debug)
 
+# ----------------------------
 # Service
-ldap_nodeport: # ldap nodeport, e.g. 30389
-ldaps_nodeport: # ldaps nodeport, e.g. 30636
+# ----------------------------
+ldap_nodeport: # NodePort for OpenLDAP service
+ldaps_nodeport: # NodePort for LDAPS service
 
+# ----------------------------
 # Persistent Volume Claims
-ldap_storage_class: # storage class for LDAP, e.g. "rook-ceph-block"
-ldap_storage_data_size: # ldap storage data size, e.g. "1Gi"
-ldap_storage_config_size: # ldap storage config size, e.g. "512Mi"
+# ----------------------------
+ldap_storage_class: # Storage class for OpenLDAP PVC e.g., "rook-ceph-block"
+ldap_storage_data_size: # 1Gi  # Size for OpenLDAP data PVC
+ldap_storage_config_size: # 512Mi  # Size for OpenLDAP config PVC
+

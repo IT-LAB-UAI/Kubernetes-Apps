@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ dex_configmap_name }}
+  namespace: {{ dex_namespace }}
+data:
+  config.yaml: |
+{{ lookup('template', '../Templates/dex-config.yml.j2') | indent(4, true) }}

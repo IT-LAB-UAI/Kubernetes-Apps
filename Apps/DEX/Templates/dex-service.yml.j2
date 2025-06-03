@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ dex_service_name }}
+  namespace: {{ dex_namespace }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ dex_service_port }}
+      targetPort: {{ dex_container_port }}
+      nodePort: {{ dex_node_port }}
+      name: https
+  selector:
+    app: {{ dex_app_selector }}

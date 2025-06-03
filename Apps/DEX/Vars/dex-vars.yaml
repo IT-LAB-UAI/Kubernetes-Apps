@@ -1,0 +1,49 @@
+# ============================
+# Vars for DEX Kubernetes Manifests
+# ============================
+
+# General / Namespace
+dex_namespace: # Namespace for DEX
+
+# ----------------------------
+# Deployment
+# ----------------------------
+dex_app_name: # dex application name
+dex_replicas: # Number of replicas for DEX deployment
+dex_image: # ghcr.io/dexidp/dex # DEX Docker image repository
+dex_image_tag: # v2.37.0 # DEX Docker image tag
+dex_log_level: # Log level for DEX example: debug, info, warn, error
+dex_service_account: # Service account for DEX
+dex_tls_secret_name: # Name of the TLS secret for DEX
+
+# ----------------------------
+# ConfigMap (Dex Configuration)
+# ----------------------------
+dex_configmap_name: # Name of the ConfigMap for DEX configuration
+dex_issuer: # Issuer URL for DEX, used in OAuth2 flows, example: https://
+
+# LDAP Connector Settings
+ldap_host: # LDAP server address and port
+ldap_bind_dn: # Bind DN for LDAP authentication
+ldap_bind_pw: # Password for LDAP bind DN
+ldap_user_base_dn: # Base DN for LDAP user search
+ldap_group_base_dn: # Base DN for LDAP group search
+
+# Static Clients
+kubelogin_redirect_uri: # Redirect URI for kubelogin client, example: http://localhost:8000
+kubelogin_secret: # Secret for kubelogin client
+
+# ----------------------------
+# RBAC
+# ----------------------------
+dex_clusterrole_name: # Name of the ClusterRole for DEX
+dex_clusterrolebinding_name: # Name of the ClusterRoleBinding for DEX
+
+# ----------------------------
+# Service
+# ----------------------------
+dex_service_name: # Name of the DEX service
+dex_node_port: # NodePort for DEX service, example: 30556
+dex_service_port: # Service port for DEX, example: 443
+dex_container_port: # Container port for DEX, example: 5556
+dex_app_selector: # Selector for DEX application in the service, example: dex

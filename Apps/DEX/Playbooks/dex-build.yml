@@ -1,0 +1,53 @@
+---
+- name: Build and deploy Dex with TLS support
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+      - ../Vars/dex-vars.yaml
+
+  vars:
+      tls_cert_dir: /root/certs
+      dex_tls_cert_path: "{{ tls_cert_dir }}/tls.crt"
+      dex_tls_key_path: "{{ tls_cert_dir }}/tls.key"
+      dex_tls_ip: "{{ dex_issuer | regex_replace('https://', '') | regex_replace(':.*$', '') }}"
+
+  tasks:
+      - name: Ensure certs directory exists
+        file:
+            path: "{{ tls_cert_dir }}"
+            state: directory
+            mode: "0700"
+
+      - name: Apply namespace (must exist before secret)
+        command: kubectl apply -f ../Manifest/dex-namespace.yaml
+
+      - name: Generate TLS certificates for Dex
+        command: >
+            openssl req -x509 -newkey rsa:4096
+            -keyout {{ dex_tls_key_path }}
+            -out {{ dex_tls_cert_path }}
+            -days 365 -nodes
+            -subj "/CN={{ dex_tls_ip }}"
+            -addext "subjectAltName=IP:{{ dex_tls_ip }}"
+        args:
+            creates: "{{ dex_tls_cert_path }}"
+
+      - name: Create dex-tls secret in Kubernetes
+        command: >
+            kubectl -n {{ dex_namespace }} create secret tls {{ dex_tls_secret_name }}
+            --cert={{ dex_tls_cert_path }} --key={{ dex_tls_key_path }}
+        register: create_tls_secret
+        failed_when: "'AlreadyExists' not in create_tls_secret.stderr and create_tls_secret.rc != 0"
+        changed_when: "'created' in create_tls_secret.stdout"
+
+      - name: Apply RBAC
+        command: kubectl apply -f ../Manifest/dex-rbac.yaml
+
+      - name: Apply ConfigMap
+        command: kubectl apply -f ../Manifest/dex-configmap.yaml
+
+      - name: Apply Deployment
+        command: kubectl apply -f ../Manifest/dex-deployment.yaml
+
+      - name: Apply Service
+        command: kubectl apply -f ../Manifest/dex-service.yaml
