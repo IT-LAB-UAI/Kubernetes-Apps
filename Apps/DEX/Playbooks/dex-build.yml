@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: false
   vars_files:
-      - ../Vars/dex-vars.yaml
+      - ../Vars/dex-vars.yml
 
   vars:
       tls_cert_dir: /root/certs
@@ -18,8 +18,8 @@
             state: directory
             mode: "0700"
 
-      - name: Apply namespace (must exist before secret)
-        command: kubectl apply -f ../Manifest/dex-namespace.yaml
+      - name: Apply namespace
+        command: kubectl apply -f ../Manifest/dex-namespace.yml
 
       - name: Generate TLS certificates for Dex
         command: >
@@ -32,22 +32,28 @@
         args:
             creates: "{{ dex_tls_cert_path }}"
 
-      - name: Create dex-tls secret in Kubernetes
+      - name: Check if dex-tls secret already exists
+        command: kubectl -n {{ dex_namespace }} get secret {{ dex_tls_secret_name }}
+        register: dex_tls_secret_check
+        ignore_errors: true
+
+      - name: Create dex-tls secret in Kubernetes (only if it doesn't exist)
         command: >
             kubectl -n {{ dex_namespace }} create secret tls {{ dex_tls_secret_name }}
             --cert={{ dex_tls_cert_path }} --key={{ dex_tls_key_path }}
-        register: create_tls_secret
-        failed_when: "'AlreadyExists' not in create_tls_secret.stderr and create_tls_secret.rc != 0"
-        changed_when: "'created' in create_tls_secret.stdout"
+        when: dex_tls_secret_check.rc != 0
+
+      - name: Apply service account
+        command: kubectl apply -f ../Manifest/dex-serviceaccount.yml
 
       - name: Apply RBAC
-        command: kubectl apply -f ../Manifest/dex-rbac.yaml
+        command: kubectl apply -f ../Manifest/dex-rbac.yml
 
       - name: Apply ConfigMap
-        command: kubectl apply -f ../Manifest/dex-configmap.yaml
+        command: kubectl apply -f ../Manifest/dex-configmap.yml
 
       - name: Apply Deployment
-        command: kubectl apply -f ../Manifest/dex-deployment.yaml
+        command: kubectl apply -f ../Manifest/dex-deployment.yml
 
       - name: Apply Service
-        command: kubectl apply -f ../Manifest/dex-service.yaml
+        command: kubectl apply -f ../Manifest/dex-service.yml

@@ -5,31 +5,31 @@
 
   tasks:
       - name: Apply namespace
-        command: kubectl apply -f ../Manifest/lda-namespace.yaml
+        command: kubectl apply -f ../Manifest/ldap-namespace.yml
         register: namespace_output
         changed_when: "'created' in namespace_output.stdout or 'configured' in namespace_output.stdout"
 
       - name: Apply PVC
-        command: kubectl apply -f ../Manifest/lda-pvc.yaml
+        command: kubectl apply -f ../Manifest/ldap-pvc.yml
         register: pvc_output
         changed_when: "'created' in pvc_output.stdout or 'configured' in pvc_output.stdout"
 
       - name: Apply ConfigMap
-        command: kubectl apply -f ../Manifest/lda-configmap.yaml
+        command: kubectl apply -f ../Manifest/ldap-configmap.yml
         register: cm_output
         changed_when: "'created' in cm_output.stdout or 'configured' in cm_output.stdout"
 
       - name: Apply Secret
-        command: kubectl apply -f ../Manifest/lda-secret.yaml
+        command: kubectl apply -f ../Manifest/ldap-secret.yml
         register: secret_output
         changed_when: "'created' in secret_output.stdout or 'configured' in secret_output.stdout"
 
       - name: Apply Deployment
-        command: kubectl apply -f ../Manifest/lda-deployment.yaml
+        command: kubectl apply -f ../Manifest/ldap-deployment.yml
         register: deployment_output
         changed_when: "'created' in deployment_output.stdout or 'configured' in deployment_output.stdout"
 
       - name: Apply Service
-        command: kubectl apply -f ../Manifest/lda-service.yaml
+        command: kubectl apply -f ../Manifest/ldap-service.yml
         register: svc_output
         changed_when: "'created' in svc_output.stdout or 'configured' in svc_output.stdout"
