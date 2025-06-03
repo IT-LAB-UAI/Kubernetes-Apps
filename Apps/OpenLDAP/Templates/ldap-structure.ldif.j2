@@ -1,0 +1,25 @@
+# This file is part of the OpenLDAP configuration.
+# It defines the structure of the LDAP directory.
+# This is an example template for creating a basic LDAP structure.
+
+# Create 'ou=people'
+dn: ou=people,dc={{ ldap_domain | replace('.', ',dc=') }}
+objectClass: organizationalUnit
+ou: people
+
+# Create 'ou=groups'
+dn: ou=groups,dc={{ ldap_domain | replace('.', ',dc=') }}
+objectClass: organizationalUnit
+ou: groups
+
+# Create 'users' group
+dn: cn=users,ou=groups,dc={{ ldap_domain | replace('.', ',dc=') }}
+objectClass: groupOfNames
+cn: users
+member: cn=dummy,dc={{ ldap_domain | replace('.', ',dc=') }}
+
+# Create 'admins' group
+dn: cn=admins,ou=groups,dc={{ ldap_domain | replace('.', ',dc=') }}
+objectClass: groupOfNames
+cn: admins
+member: cn=dummy,dc={{ ldap_domain | replace('.', ',dc=') }}

@@ -1,0 +1,43 @@
+---
+- name: Render OpenLDAP Kubernetes manifests
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+      - ../Vars/ldap-vars.yml
+      - ../Vars/ldap-vault.yml
+
+  tasks:
+      - name: Ensure Manifest output directory exists
+        file:
+            path: ../Manifest
+            state: directory
+
+      - name: Render namespace manifest
+        template:
+            src: ../Templates/ldap-namespaces.yml.j2
+            dest: ../Manifest/ldap-namespace.yml
+
+      - name: Render deployment manifest
+        template:
+            src: ../Templates/ldap-deployment.yml.j2
+            dest: ../Manifest/ldap-deployment.yml
+
+      - name: Render configmap manifest
+        template:
+            src: ../Templates/ldap-configmap.yml.j2
+            dest: ../Manifest/ldap-configmap.yml
+
+      - name: Render secret manifest
+        template:
+            src: ../Templates/ldap-secrets.yml.j2
+            dest: ../Manifest/ldap-secret.yml
+
+      - name: Render service manifest
+        template:
+            src: ../Templates/ldap-service.yml.j2
+            dest: ../Manifest/ldap-service.yml
+
+      - name: Render PVC manifest
+        template:
+            src: ../Templates/ldap-pvc.yml.j2
+            dest: ../Manifest/ldap-pvc.yml

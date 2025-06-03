@@ -1,0 +1,3 @@
+# Secrets for OpenLDAP Vault integration
+ldap_admin_password: # Admin password for OpenLDAP, e.g. "AdminPassword"
+ldap_admin_password_b64: "{{ ldap_admin_password | b64encode }}"

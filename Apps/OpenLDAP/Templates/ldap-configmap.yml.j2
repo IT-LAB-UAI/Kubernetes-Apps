@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ldap-init
+  namespace: {{ ldap_namespace }}
+data:
+  bootstrap.ldif: |
+{{ lookup('template', '../Templates/ldap-structure.ldif.j2') | indent(4, true) }}

@@ -1,0 +1,19 @@
+# Namespace
+ldap_namespace: # ldap namespace
+
+# Deployment
+# ldap_namespace:
+ldap_image: # ldap image e.g. "osixia/openldap"
+ldap_image_tag: # ldap image tag e.g. "1.5.0"
+ldap_organisation: # your organisation for LDAP e.g. "My-Organisation"
+ldap_domain: # your domain for LDAP e.g. "my.org.com"
+ldap_log_level: # log level for LDAP, e.g. "256" for basic logging
+
+# Service
+ldap_nodeport: # ldap nodeport, e.g. 30389
+ldaps_nodeport: # ldaps nodeport, e.g. 30636
+
+# Persistent Volume Claims
+ldap_storage_class: # storage class for LDAP, e.g. "rook-ceph-block"
+ldap_storage_data_size: # ldap storage data size, e.g. "1Gi"
+ldap_storage_config_size: # ldap storage config size, e.g. "512Mi"
